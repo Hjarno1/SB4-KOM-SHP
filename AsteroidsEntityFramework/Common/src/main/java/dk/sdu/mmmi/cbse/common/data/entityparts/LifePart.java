@@ -18,9 +18,8 @@ public class LifePart implements EntityPart {
     private boolean isHit = false;
     private float expiration;
 
-    public LifePart(int life, float expiration) {
+    public LifePart(int life) {
         this.life = life;
-        this.expiration = expiration;
     }
 
     public int getLife() {
@@ -31,7 +30,7 @@ public class LifePart implements EntityPart {
         this.life = life;
     }
 
-    public boolean isIsHit() {
+    public boolean isHit() {
         return isHit;
     }
 
