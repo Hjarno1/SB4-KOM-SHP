@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.cbse.playersystem;
 
-import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.LEFT;
@@ -12,9 +11,11 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.player.Player;
-import dk.sdu.mmmi.cbse.common.services.BulletSPI;
+import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.util.SPILocator;
+
+import java.util.ServiceLoader;
 
 /**
  *
@@ -34,7 +35,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             movingPart.setUp(gameData.getKeys().isDown(UP));
 
             if (gameData.getKeys().isPressed(GameKeys.SPACE)){
-                for (BulletSPI bullet : SPILocator.locateAll(BulletSPI.class)){
+                for (BulletSPI bullet : ServiceLoader.load(BulletSPI.class)){
                     world.addEntity(bullet.createBullet(player, gameData));
                 }
             }
