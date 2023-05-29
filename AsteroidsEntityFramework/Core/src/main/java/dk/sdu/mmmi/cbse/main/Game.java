@@ -5,23 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmi.cbse.enemysystem.EnemyControlSystem;
-import dk.sdu.mmi.cbse.enemysystem.EnemyPlugin;
-import dk.sdu.mmmi.cbse.asteroid.AsteroidPlugin;
-import dk.sdu.mmmi.cbse.asteroid.AsteroidProcessor;
-import dk.sdu.mmmi.cbse.bulletsystem.BulletControlSystem;
-import dk.sdu.mmmi.cbse.bulletsystem.BulletPlugin;
-import dk.sdu.mmmi.cbse.collisionsystem.CollisionDetector;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.util.SPILocator;
 import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import dk.sdu.mmmi.cbse.playersystem.PlayerControlSystem;
-import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Game
@@ -52,31 +46,8 @@ public class Game
                 new GameInputProcessor(gameData)
         );
 
-        IGamePluginService playerPlugin = new PlayerPlugin();
-        IGamePluginService enemyPlugin = new EnemyPlugin();
-        IGamePluginService asteroidPlugin = new AsteroidPlugin();
-        IGamePluginService bulletPlugin = new BulletPlugin();
-
-        IEntityProcessingService playerProcess = new PlayerControlSystem();
-        IEntityProcessingService enemyProcess = new EnemyControlSystem();
-        IEntityProcessingService asteroidProcess = new AsteroidProcessor();
-        IEntityProcessingService bulletProcess = new BulletControlSystem();
-
-        IPostEntityProcessingService collisionProcess = new CollisionDetector();
-
-        entityPlugins.add(playerPlugin);
-        entityPlugins.add(enemyPlugin);
-        entityPlugins.add(asteroidPlugin);
-        entityPlugins.add(bulletPlugin);
-
-        entityProcessors.add(playerProcess);
-        entityProcessors.add(enemyProcess);
-        entityProcessors.add(asteroidProcess);
-        entityProcessors.add(bulletProcess);
-
-        postEntityProcessors.add(collisionProcess);
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
+        for (IGamePluginService iGamePlugin : getGamePlugins()) {
             iGamePlugin.start(gameData, world);
         }
     }
@@ -99,10 +70,10 @@ public class Game
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : entityProcessors) {
+        for (IEntityProcessingService entityProcessorService : getEntityProcessors()) {
             entityProcessorService.process(gameData, world);
         }
-        for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessors) {
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessors()) {
             postEntityProcessorService.process(gameData, world);
         }
     }
@@ -126,6 +97,18 @@ public class Game
 
             sr.end();
         }
+    }
+
+    private Collection<? extends IGamePluginService> getGamePlugins() {
+        return SPILocator.locateAll(IGamePluginService.class);
+    }
+
+    private Collection<? extends IEntityProcessingService> getEntityProcessors() {
+        return SPILocator.locateAll(IEntityProcessingService.class);
+    }
+
+    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessors() {
+        return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
 
     @Override

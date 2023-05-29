@@ -6,7 +6,7 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 
-public class AsteroidSplitterImpl{
+public class AsteroidSplitterImpl implements IAsteroidSplitter {
 
     public void createSplitAsteroid(Entity e, World world) {
         PositionPart otherPos = e.getPart(PositionPart.class);
