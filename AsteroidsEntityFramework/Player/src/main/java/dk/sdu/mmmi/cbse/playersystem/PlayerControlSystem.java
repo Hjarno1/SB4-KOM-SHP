@@ -1,6 +1,6 @@
 package dk.sdu.mmmi.cbse.playersystem;
 
-import dk.sdu.mmmi.cbse.bulletsystem.BulletControlSystem;
+import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import static dk.sdu.mmmi.cbse.common.data.GameKeys.LEFT;
@@ -11,10 +11,10 @@ import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.cbse.common.player.Player;
+import dk.sdu.mmmi.cbse.common.services.BulletSPI;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
+import dk.sdu.mmmi.cbse.common.util.SPILocator;
 
 /**
  *
@@ -22,7 +22,6 @@ import static java.lang.Math.sqrt;
  */
 public class PlayerControlSystem implements IEntityProcessingService {
 
-    private BulletControlSystem bcs = new BulletControlSystem();
     @Override
     public void process(GameData gameData, World world) {
 
@@ -35,10 +34,11 @@ public class PlayerControlSystem implements IEntityProcessingService {
             movingPart.setUp(gameData.getKeys().isDown(UP));
 
             if (gameData.getKeys().isPressed(GameKeys.SPACE)){
-                world.addEntity(bcs.createBullet(player, gameData));
+                for (BulletSPI bullet : SPILocator.locateAll(BulletSPI.class)){
+                    world.addEntity(bullet.createBullet(player, gameData));
+                }
             }
-            
-            
+
             movingPart.process(gameData, player);
             positionPart.process(gameData, player);
 

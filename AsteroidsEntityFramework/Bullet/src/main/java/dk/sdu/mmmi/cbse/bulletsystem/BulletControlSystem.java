@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.cbse.bulletsystem;
 
+import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -7,9 +8,10 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.TimerPart;
+import dk.sdu.mmmi.cbse.common.services.BulletSPI;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
-public class BulletControlSystem implements IEntityProcessingService {
+public class BulletControlSystem implements IEntityProcessingService, BulletSPI {
 
     @Override
     public void process(GameData gameData, World world) {
@@ -69,7 +71,7 @@ public class BulletControlSystem implements IEntityProcessingService {
         shapey[0] = y;
 
         shapex[1] = (float) (x + Math.cos(radians - 4 * 3.1415f / 5));
-        shapey[1] = (float) (y + Math.sin(radians - 4 * 3.1145f / 5));
+        shapey[1] = (float) (y + Math.sin(radians - 4 * 3.1415 / 5));
 
         entity.setShapeX(shapex);
         entity.setShapeY(shapey);
