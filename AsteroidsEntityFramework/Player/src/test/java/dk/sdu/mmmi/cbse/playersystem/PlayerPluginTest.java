@@ -23,14 +23,14 @@ class PlayerPluginTest {
 
     @Test
     @Order(1) //executes first
-    void addEnemyToWorld() {
+    void addPlayerToWorld() {
         player.start(mockedGameData, mockedWorld);
         verify(mockedWorld).addEntity(any(Player.class));
     }
 
     @Test
     @Order(2) //executes second
-    void removeEnemyFromWorld() {
+    void removePlayerFromWorld() {
         player.stop(mockedGameData, mockedWorld);
         verify(mockedWorld).removeEntity(any(Player.class));
     }
